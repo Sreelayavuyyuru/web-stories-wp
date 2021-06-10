@@ -82,16 +82,26 @@ const ChecklistTab = ({
     [currentCheckpoint]
   );
 
-  const { highPriority, recommended, pages } = useMemo(
-    () =>
+  // bulk actions live at the top of recommended
+  // const bulkActions = useMemo(() => {
+  //   return checklist.filter(
+  //     (item) => item.type === PRE_PUBLISH_MESSAGE_TYPES.BULK_ACTION
+  //   );
+  // }, [checklist]);
+
+  const { highPriority, recommended, pages } = useMemo(() => {
+    return (
       checklist
         // TODO remove filtering out video optimization check
         // based on feature flag after design has a chance to
         // look at it.
-        .filter((item) =>
-          item.message === MESSAGES.MEDIA.VIDEO_NOT_OPTIMIZED.MAIN_TEXT
-            ? canOptimizeVideo
-            : true
+        .filter(
+          (item) =>
+            // filter out bulk actions for now and put them at the top of recommended
+            item.type !== PRE_PUBLISH_MESSAGE_TYPES.BULK_ACTION ||
+            (item.message === MESSAGES.MEDIA.VIDEO_NOT_OPTIMIZED.MAIN_TEXT
+              ? canOptimizeVideo
+              : true)
         )
         .reduce(
           (prevMessages, current) => {
@@ -141,9 +151,9 @@ const ChecklistTab = ({
             recommended: [],
             pages: {},
           }
-        ),
-    [checklist, canOptimizeVideo]
-  );
+        )
+    );
+  }, [checklist, canOptimizeVideo]);
 
   const getOnPrepublishSelect = useCallback(
     (args) => {
@@ -286,6 +296,7 @@ const ChecklistTab = ({
           }
           ariaLabel={TEXT.RECOMMENDED_TITLE}
         >
+          {/* todo render recommended bulk actions here */}
           {canOptimizeVideo && (
             <AutoVideoOptimization
               areVideosAutoOptimized={areVideosAutoOptimized}
