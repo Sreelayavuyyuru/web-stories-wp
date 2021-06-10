@@ -247,6 +247,18 @@ const CarouselArea = styled(Area).attrs({
   showOverflow: true,
 })``;
 
+const RightClickPageZone = styled.div`
+  position: relative;
+  grid-area: p;
+`;
+
+const RightClickMenuContainer = styled.div`
+  position: absolute;
+  top: ${({ position }) => position?.y ?? 0}px;
+  left: ${({ position }) => position?.x ?? 0}px;
+  z-index: 9999;
+`;
+
 /**
  * @param {!{current: ?Element}} containerRef Container reference.
  */
@@ -437,6 +449,8 @@ export {
   NavPrevArea,
   NavNextArea,
   QuickActionsArea,
+  RightClickMenuContainer,
+  RightClickPageZone,
   CarouselArea,
   useLayoutParams,
   useLayoutParamsCssVars,
